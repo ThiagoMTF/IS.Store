@@ -1,0 +1,93 @@
+﻿@using IS.Store.UI.ViewModels.Produtos.Index
+@{ 
+    ViewBag.Title = "Listagem de Produtos";
+}
+<h2>@ViewBag.Title:</h2>
+
+<div class="mb-3">
+    <a class="btn btn-outline-primary" href="@Url.Action("AddEdit")">Novo Produto</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Tipo</th>
+                <th>Qtde</th>
+                <th>Data do Cadastro</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ProdutoIndexVM produto in Model)
+            {
+                <tr id="produto-@produto.Id">
+                    <td>@produto.Nome</td>
+                    <td>R$@produto.Preco.ToString("F2")</td>
+                    <td>@produto.Tipo</td>
+                    <td>@produto.Qtde</td>
+                    <td>@produto.DataCadastro</td>
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-outline-success btn-sm" href="@Url.Action("AddEdit", new { id = produto.Id })"><i class="fas fa-edit"></i>Editar</a>
+                            <button class="btn btn-outline-danger btn-sm" onclick="DelProd(@produto.Id, '@produto.Nome')"><i class="fas fa-trash"></i>Excluir</button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div data-id="0" class="modal delModal" id="delModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Excluir produto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir <strong><span id="nomeProdutoModal"></span></strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-primary" onclick="ConfirmDelProd()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function DelProd(id, nome) {
+        $('#nomeProdutoModal').text(nome);
+        $('#delModal').data('id', id).modal('show');
+        $('.modal-backdrop').remove();
+    }
+    
+    function ConfirmDelProd() {
+        let id = $('#delModal').data('id');
+        //XMLHTTPREQUEST
+        let xhr = new XMLHttpRequest();
+        const url = `/Produtos/DelProd/${id}`;
+
+        xhr.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 404) {
+                $('#delModal').data('id', '0').modal('hide');
+                toastr.error('Erro na exclusão!', 'IS Store');
+            }
+            if (this.readyState === 4 && this.status === 200) {
+                let tr = document.querySelector(`#produto-${id}`);
+                if (tr != null) {
+                    tr.remove();
+                }
+                //remover do HTML
+                $('#delModal').data('id', '0').modal('hide');
+                toastr.success('Produto excluido!', 'IS Store');
+            }
+        }
+        xhr.open('get', url);
+        xhr.send();
+    }
+</script>

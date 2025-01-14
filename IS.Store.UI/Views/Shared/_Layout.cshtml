@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/all.min.css" rel="stylesheet" />
+    <link href="~/Content/toastr.min.css" rel="stylesheet" />
+    <link href="~/Content/site.css" rel="stylesheet" />
+    <link href="~/LandkitImport/assets/css/libs.bundle.css" rel="stylesheet" />
+    <link href="~/LandkitImport/assets/css/theme.bundle.css" rel="stylesheet" />
+    <title>IS Store | @ViewBag.Title</title>
+</head>
+<body>
+    @Html.Partial("_menu")
+    <div class="container mb-10">
+        @RenderBody()
+    </div>
+    <footer class="footer mt-auto bg-info footer-custom">
+        <div class="container">
+            <span class="text-body-secondary">&copy;@DateTime.Now.Year I.S. Corporation.</span>
+        </div>
+    </footer>
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="~/LandkitImport/assets/js/theme.bundle.js"></script>
+    <script src="~/LandkitImport/assets/js/vendor.bundle.js"></script>
+    <script src="~/Scripts/toastr.min.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    @RenderSection("scripts", false)
+</body>
+</html>
